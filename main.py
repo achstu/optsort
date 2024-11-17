@@ -2,37 +2,31 @@ import itertools
 from ordering import PartialOrder
 
 
-def search(order: PartialOrder):
+def search(order: PartialOrder, depth=0, index=1):
     if order.count_permutations() == 1:
-        return
+        return (order, depth, None, None, None)
 
     for i, j in itertools.combinations(range(order.size), 2):
+        if not (order.consistent(i, j) and order.consistent(j, i)):
+            continue
+
         left = order.with_comparison(i, j)
-        right = order.with_comparison(i, j)
+        right = order.with_comparison(j, i)
 
         diff = abs(left.count_permutations() - right.count_permutations())
 
         if diff <= 1:
-            print(left, right)
+            return (
+                order,
+                depth,
+                (i, j),
+                search(left, depth + 1, 2 * index),
+                search(right, depth + 1, 2 * index + 1),
+            )
+
+    return None
 
 
-# empty = PartialOrder(3)
-# search(empty)
-
-a = PartialOrder(4).with_comparison(1, 0).with_comparison(1, 2)
-b = PartialOrder(4).with_comparison(3, 0).with_comparison(3, 1)
-
-print(a.isomorphism(b))
-
-# print([x for x in itertools.combinations(range(3), 2)])
-
-
-# from permutation import Permutation
-
-# pi = Permutation([1, 3, 0, 2])
-# print(pi.apply("UGAR"))
-
-# print(pi.transform(0))
-# print(pi.transform(1))
-# print(pi.transform(2))
-# print(pi.transform(3))
+root = PartialOrder(3)
+tree = search(root)
+print(tree)

@@ -9,13 +9,20 @@ def cmp(a, b):
 class PartialOrder:
     def __init__(self, size):
         self.size: int = size
-        self.childs: dict[int, set] = {i: set() for i in range(size)}
+        self.childs: dict[int, frozenset] = {i: frozenset() for i in range(size)}
 
-    def __repr__(self):
-        return f"{self.childs}"
+    # def __repr__(self):
+    # return f"ordering{self.childs}"
+    # return "ordering"
+
+    def __hash__(self):
+        return hash(frozenset(self.childs.items()))
 
     def is_ancestor(self, root, node):
         return any(c == node or self.is_ancestor(c, node) for c in self.childs[root])
+
+    def consistent(self, i, j):
+        return not self.is_ancestor(i, j)
 
     def matches_permutation(self, perm):
         return not any(
@@ -34,7 +41,7 @@ class PartialOrder:
         # a[i] < a[j]
         result = copy.deepcopy(self)
         if not self.is_ancestor(j, i):
-            result.childs[j].add(i)
+            result.childs[j] = frozenset(list(result.childs[j]) + [i])
         return result
 
     def with_permutation(self, perm):
