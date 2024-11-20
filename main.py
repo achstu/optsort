@@ -2,9 +2,9 @@ import itertools
 from ordering import PartialOrder
 
 
-def search(order: PartialOrder, depth=0, index=1):
+def search(order: PartialOrder):
     if order.count_permutations() == 1:
-        return (order, depth, None, None, None)
+        return (order, 1, None, None, None)
 
     for i, j in itertools.combinations(range(order.size), 2):
         if not (order.consistent(i, j) and order.consistent(j, i)):
@@ -16,12 +16,16 @@ def search(order: PartialOrder, depth=0, index=1):
         diff = abs(left.count_permutations() - right.count_permutations())
 
         if diff <= 1:
+            # isomorphism = left.isomorphism(right)
+            # if isomorphism:
+            # return order
+            # else:
             return (
                 order,
-                depth,
+                1,
                 (i, j),
-                search(left, depth + 1, 2 * index),
-                search(right, depth + 1, 2 * index + 1),
+                search(left),
+                search(right),
             )
 
     return None
