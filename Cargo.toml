@@ -1,0 +1,43 @@
+[package]
+name = "optsort"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+itertools = "0.14.0"
+criterion = "0.5.1"
+rand = "0.8.5"
+quote = "1.0.38"
+proc-macro2 = "1.0.92"
+prettyplease = "0.2.25"
+syn = "2.0.94"
+# rug = "1.26.1"
+# ibig = "0.3.6"
+# num-bigint = "0.4.6"
+
+
+
+[dependencies.rug]
+version = "1.26.1"
+default-features = false
+features = ["integer"]
+
+
+# [dev-dependencies]
+# criterion = "0.4"
+
+[[bin]]
+name = "sort"
+path = "src/bin/sort.rs"
+
+[[bin]]
+name = "generate"
+path = "src/bin/generate.rs"
+
+[[bin]]
+name = "main"
+path = "src/main.rs"
+
+[[bench]]
+name = "benchmark"
+harness = false
